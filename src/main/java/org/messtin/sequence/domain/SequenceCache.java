@@ -1,6 +1,5 @@
 package org.messtin.sequence.domain;
 
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class SequenceCache {
@@ -8,13 +7,11 @@ public class SequenceCache {
     private final long minId;
     private final long maxId;
     private final AtomicLong currentId;
-    private final Date updateTime;
     private final String sequenceName;
 
-    private SequenceCache(long minId, long maxId, Date updateTime, String sequenceName) {
+    private SequenceCache(long minId, long maxId, String sequenceName) {
         this.minId = minId;
         this.maxId = maxId;
-        this.updateTime = updateTime;
         this.sequenceName = sequenceName;
         this.currentId = new AtomicLong(this.minId);
     }
@@ -26,7 +23,6 @@ public class SequenceCache {
     public static class SequenceCacheBuilder {
         private long minId;
         private long maxId;
-        private Date updateTime;
         private String sequenceName;
 
         public SequenceCacheBuilder minId(long minId) {
@@ -39,18 +35,13 @@ public class SequenceCache {
             return this;
         }
 
-        public SequenceCacheBuilder updateTime(Date updateTime) {
-            this.updateTime = updateTime;
-            return this;
-        }
-
         public SequenceCacheBuilder sequenceName(String sequenceName) {
             this.sequenceName = sequenceName;
             return this;
         }
 
         public SequenceCache build() {
-            return new SequenceCache(minId, maxId, updateTime, sequenceName);
+            return new SequenceCache(minId, maxId, sequenceName);
         }
 
     }
@@ -65,10 +56,6 @@ public class SequenceCache {
 
     public AtomicLong getCurrentId() {
         return currentId;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
     }
 
     public String getSequenceName() {
