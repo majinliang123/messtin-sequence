@@ -12,10 +12,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RunWith(MockitoJUnitRunner.class)
 public class Sample {
     private static final Logger logger = LogManager.getLogger(Sample.class);
+
+    ExecutorService pool = Executors.newCachedThreadPool();
 
     private ComboPooledDataSource dataSource = new ComboPooledDataSource();
 
@@ -29,7 +34,7 @@ public class Sample {
     @Before
     public void setUpDataSource() throws PropertyVetoException {
         dataSource.setDriverClass("org.h2.Driver");
-        dataSource.setJdbcUrl("jdbc:h2:~/test");
+        dataSource.setJdbcUrl("jdbc:h2:./test");
         dataSource.setUser("sa");
         dataSource.setPassword("");
         dataSource.setInitialPoolSize(3);
@@ -49,10 +54,42 @@ public class Sample {
     }
 
     @Test
-    public void test() {
+    public void testWithSingleThread() {
         Sequence sequence = new Sequence(dataSource, "abc");
+        loop400Times(sequence);
+    }
 
-        for (int i = 0; i < 500; i++) {
+    @Test
+    public void testWithMultiThread() throws InterruptedException {
+        Sequence sequence = new Sequence(dataSource, "abc");
+        CountDownLatch countDownLatch = new CountDownLatch(2);
+        pool.execute(() -> {
+            loop400Times(sequence);
+            countDownLatch.countDown();
+        });
+        pool.execute(() -> {
+            loop400Times(sequence);
+            countDownLatch.countDown();
+        });
+        countDownLatch.await();
+    }
+
+    @Test
+    public void testWithMultiSequence() throws InterruptedException {
+        CountDownLatch countDownLatch = new CountDownLatch(2);
+        pool.execute(() -> {
+            loop400Times(new Sequence(dataSource, "abc"));
+            countDownLatch.countDown();
+        });
+        pool.execute(() -> {
+            loop400Times(new Sequence(dataSource, "abc"));
+            countDownLatch.countDown();
+        });
+        countDownLatch.await();
+    }
+
+    private void loop400Times(Sequence sequence) {
+        for (int i = 0; i < 400; i++) {
             logger.info("Current id is {}.", sequence.nextId());
         }
     }

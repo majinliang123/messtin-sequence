@@ -29,7 +29,7 @@ public class Sequence {
             long maxId = cache.getMaxId();
             AtomicLong currentId = cache.getCurrentId();
             long id = currentId.getAndIncrement();
-            if (id <= maxId) {
+            if (id < maxId) {
                 logger.info("Get id {}.", id);
                 return id;
             }
