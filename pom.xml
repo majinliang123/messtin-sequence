@@ -11,7 +11,7 @@
     <properties>
         <mysql.version>8.0.13</mysql.version>
         <mockito.version>2.0.2-beta</mockito.version>
-        <log4j2.version>2.9.1</log4j2.version>
+        <log4j2.version>2.13.3</log4j2.version>
         <jedis.version>3.0.1</jedis.version>
         <h2.version>1.4.199</h2.version>
         <c3p0.version>0.9.1.2</c3p0.version>
