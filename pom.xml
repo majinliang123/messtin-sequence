@@ -15,7 +15,7 @@
         <jedis.version>3.0.1</jedis.version>
         <h2.version>1.4.199</h2.version>
         <c3p0.version>0.9.1.2</c3p0.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
     </properties>
 
     <dependencies>
