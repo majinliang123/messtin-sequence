@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <mysql.version>8.0.13</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <mockito.version>2.0.2-beta</mockito.version>
         <log4j2.version>2.9.1</log4j2.version>
         <jedis.version>3.0.1</jedis.version>
